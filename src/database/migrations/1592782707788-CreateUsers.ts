@@ -34,7 +34,7 @@ export default class CreateUsers1592686721280
             default: 'now()',
           },
           {
-            name: 'update_at',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
           },

@@ -7,7 +7,6 @@ import {
 } from 'typeorm';
 
 
-
 @Entity('users')
 class User {
   @PrimaryGeneratedColumn('uuid')
@@ -23,7 +22,7 @@ class User {
   password: string;
 
   @CreateDateColumn()
-  create_at:Date;
+  created_at:Date;
 
   @UpdateDateColumn()
   updated_at:Date;
