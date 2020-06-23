@@ -18,7 +18,6 @@ export default function ensureAuthenticated(
   try {
     const decoded = verify(token, authConfig.jwt.secret);
 
-    console.log(decoded);
     return next();
   } catch (err) {
     throw new Error('Invalid JWT token');
