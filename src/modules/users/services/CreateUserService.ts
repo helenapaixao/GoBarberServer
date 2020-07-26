@@ -1,5 +1,5 @@
 import { getRepository } from 'typeorm';
-import User from '../entities/User';
+import User from '../infra/typeorm/entities/User';
 import {hash} from 'bcryptjs'
 
 interface Request {
