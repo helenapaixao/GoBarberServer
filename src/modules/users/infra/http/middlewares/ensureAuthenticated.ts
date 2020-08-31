@@ -4,11 +4,10 @@ import authConfig from '@config/auth';
 
 import AppError from '@shared/errors/AppError';
 
-
 interface TokenPayload {
- sub: string,
- iat:number;
- exp:number;
+  sub: string;
+  iat: number;
+  exp: number;
 }
 
 export default function ensureAuthenticated(
@@ -23,7 +22,6 @@ export default function ensureAuthenticated(
   }
 
   const [, token] = autHeader.split(' ');
-
 
   try {
     const decoded = verify(token, authConfig.secret);
