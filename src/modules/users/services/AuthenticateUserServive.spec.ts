@@ -1,6 +1,7 @@
+import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import AuthenticateUser from './AuthenticateUserService';
 import CreateUserService from './CreateUserService';
-import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
+
 
 describe('AuthenticateUser', () => {
   it('should be able to authenticate', async () => {
