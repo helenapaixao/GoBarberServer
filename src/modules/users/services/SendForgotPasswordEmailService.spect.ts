@@ -1,9 +1,9 @@
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 
 import SendForgotPasswordEmailService from './SendForgotPasswordEmailService';
-import FakeMailProvider from '@shared/container/providers/MailProvider';
+import FakeMailProvider from '@shared/container/providers/MailProvider/fakes/fakeMailProvider';
 
-import AppError from '@shared/errors/AppError';
+/* import AppError from '@shared/errors/AppError'; */
 
 describe('SendForgotPasswordEmail', () => {
   it('should be able to recover the password using the email ', async () => {
@@ -14,6 +14,7 @@ describe('SendForgotPasswordEmail', () => {
 
     const sendForgotPasswordEmail = new SendForgotPasswordEmailService(
       fakeUsersRepository,
+      fakeMailProvider,
     );
 
     await fakeUsersRepository.create({
