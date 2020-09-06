@@ -1,11 +1,11 @@
 /* import User from '../infra/typeorm/entities/User'; */
 import { injectable, inject } from 'tsyringe';
 
-
 import AppError from '@shared/errors/AppError';
 
 import IUserTokesRepository from '../repositories/IUserTokensRepository';
 import IUsersRepository from '../repositories/IUsersRepository';
+import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 interface IRequest {
   token: string;
   password: string;
@@ -19,6 +19,9 @@ class ResetPasswordService {
 
     @inject('UserTokensRepository')
     private userTokesRepository: IUserTokesRepository,
+
+    @inject('HashProvider')
+    private hashprovider: IHashProvider,
   ) {}
   public async execute({ token, password }: IRequest): Promise<void> {
     const userToken = await this.userTokesRepository.findbyToken(token);
@@ -31,7 +34,7 @@ class ResetPasswordService {
       throw new AppError('Use does not exists');
     }
 
-    user.password = password;
+    user.password = await this.hashprovider.generateHash(password);
     await this.usersRepository.save(user);
   }
 }
