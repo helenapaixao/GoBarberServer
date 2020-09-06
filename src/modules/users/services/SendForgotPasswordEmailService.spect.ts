@@ -3,7 +3,7 @@ import AppError from '@shared/errors/AppError';
 /* import FakeMailProvider from '@shared/container/providers/MailProvider/fakes/FakeMailProvider' */
 import SendForgotPasswordEmailService from './SendForgotPasswordEmailService';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-import FakeUsersTokenRepository from '@modules/users/repositories/fakes/FakeUserTokenRepository';
+import FakeUsersTokenRepository from '@modules/users/repositories/fakes/FakeUserTokensRepository';
 
 
 //Variaveis globais
