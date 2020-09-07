@@ -8,7 +8,7 @@ import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 import User from '../infra/typeorm/entities/User';
 
 interface IRequest {
-  userId: string;
+  user_id: string;
   name: string;
   email: string;
   old_password?: string;
@@ -26,13 +26,13 @@ class UpdateProfileService {
   ) {}
 
   public async execute({
-    userId,
+    user_id,
     name,
     email,
     old_password,
     password,
   }: IRequest): Promise<User> {
-    const currentUser = await this.usersRepository.findById(userId);
+    const currentUser = await this.usersRepository.findById(user_id);
 
     if (!currentUser) {
       throw new AppError('User not found.');
