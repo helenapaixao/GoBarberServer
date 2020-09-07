@@ -9,7 +9,7 @@ let usersRepository: FakeUsersRespository;
 let storageProvider: FakeStorageProvider;
 let updateUserAvatar: UpdateUserAvatarService;
 
-describe('CreateUserService', () => {
+describe('UpdateUserAvatarService', () => {
   beforeEach(() => {
     usersRepository = new FakeUsersRespository();
     storageProvider = new FakeStorageProvider();
