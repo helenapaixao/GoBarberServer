@@ -24,19 +24,27 @@ class SendForgotPasswordEmailService {
   ) {}
   public async execute({ email }: IRequest): Promise<void> {
     const user = await this.usersRepository.findByEmail(email);
-    this.mailProvider.sendEmail(
-      email,
-      'Pedido de recuperação de senha recebido',
-    );
+
 
     if (!user) {
       throw new AppError('User does not exists');
     }
-   const {token} = await this.userTokesRepository.generate(user.id);
-    await this.mailProvider.sendEmail(
-      email,
-      `Pedido de recuperação de senha recebido: ${token}`,
-    );
+    const { token } = await this.userTokesRepository.generate(user.id);
+
+    await this.mailProvider.sendEmail({
+      to: {
+        name: user.name,
+        email: user.email,
+      },
+      subject: '[GoBarber] Recuperação de email',
+      templateData: {
+        template: 'Olá, {{name}}:{{token}}',
+        variables: {
+          name: user.name,
+          token,
+        },
+      },
+    });
   }
 }
 
