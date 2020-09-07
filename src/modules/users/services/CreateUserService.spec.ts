@@ -1,43 +1,39 @@
-import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider'
-import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
+import AppError from '@shared/errors/AppError';
+import FakeUsersRespository from '../repositories/fakes/FakeUsersRepository';
+import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 
 import CreateUserService from './CreateUserService';
 
-import AppError from '@shared/errors/AppError';
+let usersRepository: FakeUsersRespository;
+let hashProvider: FakeHashProvider;
+let createUser: CreateUserService;
 
-describe('CreateUser', () => {
-  it('should be able to create a new user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-
-    const createUser = new CreateUserService(fakeUsersRepository,fakeHashProvider);
-
-    const appointment = await createUser.execute({
-      name: 'John Doe',
-      email: 'johndoe@gmail.com',
-      password: '123456',
-    });
-    expect(appointment).toHaveProperty('id');
+describe('CreateUserService', () => {
+  beforeEach(() => {
+    usersRepository = new FakeUsersRespository();
+    hashProvider = new FakeHashProvider();
+    createUser = new CreateUserService(usersRepository, hashProvider);
   });
 
-  it('should be able to create a new user with same email from another ', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(fakeUsersRepository,fakeHashProvider);
-
-    await createUser.execute({
+  it('should be able to create a new user', async () => {
+    const user = await createUser.execute({
       name: 'John Doe',
-      email: 'johndoe@gmail.com',
+      email: 'johndoe@email.com',
       password: '123456',
     });
-    expect(
-      createUser.execute({
-        name: 'John Doe',
-        email: 'johndoe@gmail.com',
-        password: '123456',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
+
+    expect(user).toHaveProperty('id');
+  });
+
+  it('should not be able to create users with same email', async () => {
+    const userData = {
+      name: 'John Doe',
+      email: 'johndoe@email.com',
+      password: '123456',
+    };
+
+    await createUser.execute(userData);
+
+    await expect(createUser.execute(userData)).rejects.toBeInstanceOf(AppError);
   });
 });
