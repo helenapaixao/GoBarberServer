@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import {Exclude, Expose} from 'class-transformer'
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity('users')
 class User {
@@ -27,16 +27,17 @@ class User {
   avatar: string;
 
   @CreateDateColumn()
-  created_at:Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updated_at:Date;
+  updated_at: Date;
 
-@Expose()
-get avatar_url(): string {
-return `${process.env.APP_API_URL}/files/${this.avatar}`
-}
-
+  @Expose({ name: 'avatar_url' })
+  getavatar_url(): string | null {
+    return this.avatar
+      ? `${process.env.APP_API_URL}/files/${this.avatar}`
+      : null;
+  }
 }
 
 export default User;
