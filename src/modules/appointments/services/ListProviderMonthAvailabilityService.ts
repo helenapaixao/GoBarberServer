@@ -1,7 +1,6 @@
 import { injectable, inject } from 'tsyringe';
-import { getDaysInMonth, getDate } from 'date-fns';
+import { getDaysInMonth, getDate, isAfter, endOfDay } from 'date-fns';
 
-/* import User from '@modules/users/infra/typeorm/entities/User'; */
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 interface IRequest {
@@ -16,18 +15,18 @@ type IResponse = Array<{
 }>;
 
 @injectable()
-class ListProviderMonthAvailabilityService {
+class ListProvidersMonthAvailabilityService {
   constructor(
     @inject('AppointmentsRepository')
-    private appointmentsRepository: IAppointmentsRepository,
+    private appointmentsrepository: IAppointmentsRepository,
   ) {}
 
   public async execute({
     provider_id,
-    year,
     month,
+    year,
   }: IRequest): Promise<IResponse> {
-    const appointments = await this.appointmentsRepository.findAllInMonthFromProvider(
+    const appointments = await this.appointmentsrepository.findAllInMonthFromProvider(
       {
         provider_id,
         year,
@@ -37,21 +36,23 @@ class ListProviderMonthAvailabilityService {
 
     const numberOfDaysInMonth = getDaysInMonth(new Date(year, month - 1));
 
-    const eachDayArray = Array.from(
+    const daysInMonthArray = Array.from(
       { length: numberOfDaysInMonth },
       (_, index) => index + 1,
     );
 
-    //8 até as 17h
+    const availability = daysInMonthArray.map(day => {
+      const searchedDaysEnd = endOfDay(new Date(year, month - 1, day));
 
-    const availability = eachDayArray.map(day => {
-      const appointmentsInDay = appointments.filter(appointment => {
+      const appointmentsInCurrentDay = appointments.filter(appointment => {
         return getDate(appointment.date) === day;
       });
 
       return {
         day,
-        available: appointmentsInDay.length < 10,
+        available:
+          isAfter(searchedDaysEnd, new Date()) &&
+          appointmentsInCurrentDay.length < 10,
       };
     });
 
@@ -59,4 +60,4 @@ class ListProviderMonthAvailabilityService {
   }
 }
 
-export default ListProviderMonthAvailabilityService;
+export default ListProvidersMonthAvailabilityService;
